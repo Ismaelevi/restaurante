@@ -609,7 +609,6 @@
         
         let linhaEditando = null; 
 
-        // Função auxiliar: limpa o formulário e reseta o estado de edição
         function limparFormulario() {
             form.reset();
             linhaEditando = null;
@@ -618,7 +617,6 @@
             btnSubmit.classList.add('btn-primary');
         }
 
-        // Função auxiliar: renumera a primeira coluna (#) e atualiza o contador
         function renumerarLinhas() {
             Array.from(tabela.rows).forEach((tr, i) => {
                 tr.cells[0].textContent = i + 1;
@@ -626,7 +624,6 @@
             totalReservasBadge.textContent = `Total: ${tabela.rows.length}`;
         }
 
-        // Função auxiliar: cria uma nova linha na tabela
         function adicionarLinha(nome, data, hora, pessoas) {
             const novaLinha = document.createElement('tr');
 
@@ -646,9 +643,8 @@
             renumerarLinhas();
         }
 
-        // 1. SUBMIT DO FORMULÁRIO: Cria (Create) ou Atualiza (Update)
         form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Impedir recarregamento da página
+            event.preventDefault();
 
             const nome = document.getElementById('nome').value.trim();
             const data = document.getElementById('data').value.trim();
@@ -661,10 +657,10 @@
             }
 
             if (linhaEditando === null) {
-                // MODO CRIAR
+                
                 adicionarLinha(nome, data, hora, pessoas);
             } else {
-                // MODO EDITAR
+
                 linhaEditando.cells[1].textContent = nome;
                 linhaEditando.cells[2].textContent = data;
                 linhaEditando.cells[3].textContent = hora;
@@ -674,17 +670,15 @@
             }
         });
 
-        // 2. CLIQUES NA TABELA: Delegação de eventos para Editar/Excluir (Update/Delete)
         tabela.addEventListener('click', function (event) {
             const botao = event.target.closest('button');
             if (!botao) return;
 
             const linha = botao.closest('tr');
 
-            // Excluir (Delete)
             if (botao.classList.contains('btn-delete')) {
                 if (confirm(`Tem certeza que deseja cancelar a reserva de ${linha.cells[1].textContent}?`)) {
-                    // se estiver editando essa linha, limpa o form
+                    
                     if (linha === linhaEditando) {
                         limparFormulario();
                     }
@@ -693,7 +687,6 @@
                 }
             }
 
-            // Editar (Update)
             if (botao.classList.contains('btn-edit')) {
                 const nome = linha.cells[1].textContent;
                 const data = linha.cells[2].textContent;
@@ -708,12 +701,11 @@
                 linhaEditando = linha;
                 btnSubmit.textContent = 'Atualizar Reserva';
                 btnSubmit.classList.remove('btn-primary');
-                btnSubmit.classList.add('btn-warning'); // Botão amarelo quando no modo edição
+                btnSubmit.classList.add('btn-warning');
                 document.getElementById('nome').focus();
             }
         });
 
-        // Inicializa a renumeração e o contador ao carregar a página
         document.addEventListener('DOMContentLoaded', renumerarLinhas);
     </script>
 </body>
